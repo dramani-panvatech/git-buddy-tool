@@ -1,47 +1,49 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Rocket, FolderOpen, Workflow, BarChart3, CreditCard, FileText, Users, Scale, Building, Shield, UserCheck, Calculator, MapPin, Heart, Baby, Globe, Briefcase, Home } from "lucide-react";
+import { Menu, X, Rocket, FolderOpen, Workflow, BarChart3, CreditCard, FileText, Users, Scale, Building, Shield, UserCheck, Calculator, MapPin, Heart, Baby, Globe, Briefcase, Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Logo from "./Logo";
+import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
 import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const productFeatures = [
   {
-    icon: FolderOpen,
-    title: "Case Management",
-    description: "Comprehensive case tracking with intelligent organization, deadline management, and client communication tools.",
-    href: "/product#case-management"
+    icon: Scale,
+    title: "Corporate Law",
+    description: "Legal support for mergers, acquisitions, compliance, and corporate governance.",
+    href: "/#services"
   },
   {
-    icon: Workflow,
-    title: "Automated Workflows",
-    description: "Streamline repetitive tasks with customizable automation that saves time and reduces human error.",
-    href: "/product#automated-workflows"
-  },
-  {
-    icon: BarChart3,
-    title: "Analytics & Reporting",
-    description: "Data-driven insights with customizable dashboards and detailed performance metrics for your firm.",
-    href: "/product#analytics"
-  },
-  {
-    icon: CreditCard,
-    title: "Billing & Payments",
-    description: "Integrated billing system with automated invoicing, payment tracking, and financial reporting.",
-    href: "/product#billing"
+    icon: Building,
+    title: "Real Estate Law",
+    description: "Expert guidance through property transactions and development projects.",
+    href: "/#services"
   },
   {
     icon: FileText,
-    title: "Document Management",
-    description: "Secure document storage with version control, automated templates, and collaboration features.",
-    href: "/product#document-management"
+    title: "Contract Law",
+    description: "Drafting, reviewing, and negotiating contracts to protect your business interests.",
+    href: "/#services"
   },
   {
-    icon: UserCheck,
-    title: "Client Portal",
-    description: "Secure client communication hub with document sharing, appointment scheduling, and case updates.",
-    href: "/product#client-portal"
+    icon: Users,
+    title: "Employment Law",
+    description: "Navigate workplace regulations and protect your organization's human capital.",
+    href: "/#services"
+  },
+  {
+    icon: Shield,
+    title: "Intellectual Property",
+    description: "Safeguard your innovations, trademarks, and creative works with strategic IP protection.",
+    href: "/#services"
+  },
+  {
+    icon: Briefcase,
+    title: "Litigation",
+    description: "Aggressive representation in complex commercial disputes and civil litigation.",
+    href: "/#services"
   }
 ];
 
@@ -154,12 +156,16 @@ const firmSizes = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductOpen, setIsProductOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isWhoWeServeOpen, setIsWhoWeServeOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { handleNavClick } = useSmoothScroll();
 
   const navLinks = [
-    { href: "/contact", label: "Contact" },
+    { href: "/", label: "Home", icon: Home },
+    { href: "/#about", label: "About", icon: Users },
+    { href: "/contact", label: "Contact", icon: FileText },
   ];
 
   useEffect(() => {
@@ -183,7 +189,88 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8 relative">
+        <nav className="hidden md:flex items-center space-x-6 relative">
+          {/* Home, About Links */}
+          {navLinks.slice(0, 2).map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className="relative text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5 group flex items-center space-x-1"
+            >
+              <link.icon className="w-4 h-4" />
+              <span>{link.label}</span>
+              <span className="absolute left-3 -bottom-1 h-0.5 w-0 bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-[calc(100%-24px)]" />
+            </Link>
+          ))}
+
+          {/* Services Dropdown */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsServicesOpen(true)}
+            onMouseLeave={() => setIsServicesOpen(false)}
+          >
+            <button 
+              className="text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-primary/5 group"
+              onClick={() => setIsServicesOpen(!isServicesOpen)}
+            >
+              <Scale className="w-4 h-4" />
+              Services
+              <svg className={`h-4 w-4 transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''} group-hover:scale-110`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <AnimatePresence>
+              {isServicesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute left-0 mt-3 w-[600px] bg-background rounded-2xl shadow-dropdown border border-border/50 backdrop-blur-xl z-50 overflow-hidden"
+                >
+                  <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-4 rounded-xl mb-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">Legal Services</h3>
+                    <p className="text-sm text-muted-foreground">Comprehensive legal support across all practice areas</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 p-2">
+                    {productFeatures.map((service, idx) => (
+                      <Link
+                        key={idx}
+                        to={service.href}
+                        className="flex items-start space-x-3 p-4 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-accent/5 hover:shadow-md cursor-pointer group"
+                        onClick={() => setIsServicesOpen(false)}
+                      >
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 group-hover:from-primary/20 group-hover:to-accent/20 transition-all duration-300 group-hover:scale-110">
+                          <service.icon className="w-5 h-5 text-primary group-hover:scale-110 transition-transform duration-300" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors duration-300">
+                            {service.title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mt-1 group-hover:text-foreground/80 transition-colors duration-300">
+                            {service.description}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-4 border-t p-2">
+                    <Link
+                      to="/#services"
+                      className="inline-flex items-center text-primary hover:text-primary/80 text-sm font-semibold transition-all duration-300 hover:translate-x-1 group"
+                      onClick={() => setIsServicesOpen(false)}
+                    >
+                      View all services 
+                      <svg className="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           {/* Product Dropdown */}
           <div
             className="relative group"
@@ -362,26 +449,37 @@ const Header = () => {
             </AnimatePresence>
           </div>
 
-          {/* Regular Navigation Links */}
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="relative text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5 group"
-            >
-              {link.label}
-              <span className="absolute left-3 -bottom-1 h-0.5 w-0 bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-[calc(100%-24px)]" />
-            </Link>
-          ))}
+          {/* Contact Link */}
+          <Link
+            to="/contact"
+            className="relative text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5 group flex items-center space-x-1"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Contact</span>
+            <span className="absolute left-3 -bottom-1 h-0.5 w-0 bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-[calc(100%-24px)]" />
+          </Link>
 
           <Link to="/pricing" className="relative text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5 group">
             Pricing
             <span className="absolute left-3 -bottom-1 h-0.5 w-0 bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-[calc(100%-24px)]" />
           </Link>
+
+          {/* Search Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsSearchOpen(true)}
+            className="p-2 hover:bg-primary/5 rounded-full transition-all duration-300"
+            aria-label="Search"
+          >
+            <Search className="w-4 h-4 text-foreground hover:text-primary transition-colors" />
+          </Button>
         </nav>
 
-        {/* CTA */}
+        {/* User Menu & CTA */}
         <div className="hidden md:flex items-center space-x-4">
+          <UserMenu isAuthenticated={true} />
+          
           <a
             href="https://stageadmin.ringremind.com/Onboarding"
             target="_blank"
@@ -418,29 +516,68 @@ const Header = () => {
             className="md:hidden border-t border-border/50 bg-gradient-to-b from-background to-background/95 backdrop-blur-xl"
           >
             <nav className="container px-4 py-6 space-y-4">
+              {/* Mobile Navigation Links */}
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="block text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5"
+                  className="flex items-center space-x-3 text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {link.label}
+                  <link.icon className="w-4 h-4" />
+                  <span>{link.label}</span>
                 </Link>
               ))}
 
-              <a
-                href="https://stageadmin.ringremind.com/Onboarding"
-                target="_blank"
-                rel="noopener noreferrer"
+              {/* Mobile Services Link */}
+              <Link
+                to="/#services"
+                className="flex items-center space-x-3 text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5"
+                onClick={() => setIsMenuOpen(false)}
               >
-                <Button className="w-full mt-6 bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent text-accent-foreground font-semibold rounded-full shadow-lg hover:shadow-xl py-3 transition-all duration-300 group">
-                  <Rocket className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  Get Started
-                </Button>
-              </a>
+                <Scale className="w-4 h-4" />
+                <span>Services</span>
+              </Link>
+
+              {/* Mobile Pricing Link */}
+              <Link
+                to="/pricing"
+                className="flex items-center space-x-3 text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <CreditCard className="w-4 h-4" />
+                <span>Pricing</span>
+              </Link>
+
+              {/* Mobile Search */}
+              <button
+                onClick={() => {
+                  setIsSearchOpen(true);
+                  setIsMenuOpen(false);
+                }}
+                className="flex items-center space-x-3 text-sm font-semibold text-foreground hover:text-primary transition-all duration-300 px-3 py-2 rounded-lg hover:bg-primary/5 w-full text-left"
+              >
+                <Search className="w-4 h-4" />
+                <span>Search</span>
+              </button>
+
+              {/* Mobile User Menu */}
+              <div className="pt-4 border-t border-border/50">
+                <UserMenu isAuthenticated={true} />
+              </div>
+
             </nav>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Search Bar Overlay */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <SearchBar 
+            isOpen={isSearchOpen} 
+            onClose={() => setIsSearchOpen(false)} 
+          />
         )}
       </AnimatePresence>
     </header>
