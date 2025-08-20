@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+@keyframes footer-gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-footer-gradient {
+  animation: footer-gradient-move 8s ease-in-out infinite;
+  background: linear-gradient(270deg, #1e293b, #334155, #0f172a, #06b6d4, #334155, #1e293b);
+  background-size: 400% 400%;
+}
